@@ -5,6 +5,11 @@ namespace CSV_Kata
 {
     internal class CsvTab
     {
+        /// <summary>
+        /// Teständerung
+        /// </summary>
+        /// <param name="CSV_zeilen"></param>
+        /// <returns></returns>
         public static IEnumerable<string> Tabelliere(IEnumerable<string> CSV_zeilen)
         {
             var split = Split(CSV_zeilen);
