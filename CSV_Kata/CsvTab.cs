@@ -8,7 +8,7 @@ namespace CSV_Kata
         public static IEnumerable<string> Tabelliere(IEnumerable<string> CSV_zeilen)
         {
             var split = Split(CSV_zeilen);
-            var maxColumnLengths = MaxLength(split);
+            var maxColumnLengths = MaxLength(split); // test
             var result = FormatOutput(split, maxColumnLengths);
             return result;
         }
