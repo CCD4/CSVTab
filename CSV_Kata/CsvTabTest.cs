@@ -7,11 +7,32 @@ namespace CSV_Kata
     public class CsvTabTest
     {
         [Test]
+        public void FormatOutputTest()
+        {
+            string[][] input =
+            {
+                new[] {"Name", "Strasse", "Ort", "Alter"},
+                new[] {"Peter Pan", "Am Hang 5", "12345 Einsam", "42"}
+            };
+
+            string[] expected =
+            {
+                "Name     |Strasse  |Ort         |Alter|",
+                "---------+---------+------------+-----+",
+                "Peter Pan|Am Hang 5|12345 Einsam|42   |"
+            };
+
+            var coloumLenghts = CsvTab.MaxLength(input);
+            var actual = CsvTab.FormatOutput(input, coloumLenghts);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void FormatHeaderLineTest()
         {
             string expected = @"---------+---------+------------+-----+";
             int[] maxColumnLengths = { 9, 9, 12, 5 };
-            
+
             var actual = CsvTab.FormatOutputHeader(maxColumnLengths);
             Assert.AreEqual(expected, actual);
         }
@@ -26,11 +47,23 @@ namespace CSV_Kata
             };
 
             var expected = CsvTab.MaxLength(input);
-            int[] actual = {9, 9, 12, 5};
+            int[] actual = { 9, 9, 12, 5 };
             Assert.AreEqual(expected, actual);
         }
 
-        
+        [Test]
+        public void SplitTest()
+        {
+            string[] csvinput =
+            {
+                "Name;Strasse;Ort;Alter"
+            };
+
+            string[][] expected = { new[] { "Name", "Strasse", "Ort", "Alter" } };
+            var actual = CsvTab.Split(csvinput);
+            Assert.AreEqual(expected, actual);
+        }
+
         [Test]
         public void TestTabuliere()
         {
@@ -58,6 +91,7 @@ namespace CSV_Kata
             }
             Assert.AreEqual(expected, actual);
         }
+
         [Test]
         public void TestTabuliere2()
         {
@@ -70,7 +104,6 @@ namespace CSV_Kata
             {
                "Name|Strasse|Ort|Alter|",
                "----+-------+---+-----+"
-
             };
 
             var actual = CsvTab.Tabelliere(csvinput);
