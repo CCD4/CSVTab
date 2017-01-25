@@ -32,7 +32,7 @@ namespace CSV_Kata
         {
             string expected = @"---------+---------+------------+-----+";
             int[] maxColumnLengths = { 9, 9, 12, 5 };
-            
+
             var actual = CsvTab.FormatOutputHeader(maxColumnLengths);
             Assert.AreEqual(expected, actual);
         }
@@ -47,7 +47,7 @@ namespace CSV_Kata
             };
 
             var expected = CsvTab.MaxLength(input);
-            int[] actual = {9, 9, 12, 5};
+            int[] actual = { 9, 9, 12, 5 };
             Assert.AreEqual(expected, actual);
         }
 
