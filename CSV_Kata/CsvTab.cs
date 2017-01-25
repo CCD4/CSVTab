@@ -5,17 +5,17 @@ namespace CSV_Kata
 {
     internal class CsvTab
     {
-        public static IEnumerable<string> Tabelliere(IEnumerable<string> CSV_zeilen)
+        public static IEnumerable<string> Tabelliere(IEnumerable<string> csvZeilen)
         {
-            var split = Split(CSV_zeilen);
+            var split = Split(csvZeilen);
             var maxColumnLengths = MaxLength(split); 
             var result = FormatOutput(split, maxColumnLengths);
             return result;
         }
 
-        internal static IEnumerable<IEnumerable<string>> Split(IEnumerable<string> CSV_zeilen)
+        internal static IEnumerable<IEnumerable<string>> Split(IEnumerable<string> csvZeilen)
         {
-            return CSV_zeilen.Select(zeile => zeile.Split(';'));
+            return csvZeilen.Select(zeile => zeile.Split(';'));
         }
 
         internal static int[] MaxLength(IEnumerable<IEnumerable<string>> splitLines)
