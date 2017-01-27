@@ -8,14 +8,26 @@ namespace CSV_Kata
         public static IEnumerable<string> Tabelliere(IEnumerable<string> csvZeilen)
         {
             var split = Split(csvZeilen);
+            var headerLine = ExtractHeaderLine(split);
+            var lines = ExtractLines(split);
             var maxColumnLengths = MaxLength(split); 
-            var result = FormatOutput(split, maxColumnLengths);
+            var result = FormatOutput(headerLine, lines, maxColumnLengths);
             return result;
         }
 
-        internal static IEnumerable<IEnumerable<string>> Split(IEnumerable<string> csvZeilen)
+        private static IEnumerable<string> ExtractHeaderLine(IEnumerable<IEnumerable<string>> allLines)
         {
-            return csvZeilen.Select(zeile => zeile.Split(';'));
+            return allLines.First();
+        }
+
+        private static IEnumerable<IEnumerable<string>> ExtractLines(IEnumerable<IEnumerable<string>> allLines)
+        {
+            return allLines.Skip(1);
+        }
+
+        internal static string[][] Split(IEnumerable<string> csvZeilen)
+        {
+            return csvZeilen.Select(zeile => zeile.Split(';')).ToArray();
         }
 
         internal static int[] MaxLength(IEnumerable<IEnumerable<string>> splitLines)
@@ -35,29 +47,43 @@ namespace CSV_Kata
             return maxColumnLengths;
         }
 
-        internal static IEnumerable<string> FormatOutput(IEnumerable<IEnumerable<string>> splitLines,
-            int[] maxColumnLengths)
+        internal static IEnumerable<string> FormatOutput(IEnumerable<string> headerLine, IEnumerable<IEnumerable<string>> lines, int[] maxColumnLengths)
         {
-            var columnCounts = splitLines.First().Count();
             var result = new List<string>();
-
-            
-            foreach (var line in splitLines)
-            {
-                var formatedLine = string.Empty;
-                for (var i = 0; i < columnCounts; i++)
-                {
-                    var column = line.ElementAt(i);
-                    formatedLine += column.PadRight(maxColumnLengths[i]) + "|";
-                }
-                result.Add(formatedLine);
-                if (result.Count == 1)
-                    result.Add(FormatOutputHeader(maxColumnLengths));
-            }
+            result.AddRange(FormatHeader(headerLine, maxColumnLengths));
+            result.AddRange(FormatLines(lines, maxColumnLengths));
             return result;
         }
 
-        internal static string FormatOutputHeader(int[] maxColumnLengths)
+        private static IEnumerable<string> FormatLines(IEnumerable<IEnumerable<string>> splitLines, int[] maxColumnLengths)
+        {
+            foreach (var line in splitLines)
+            {
+                var formatedLine = FormatLine(maxColumnLengths, line);
+                yield return formatedLine;
+            }
+        }
+
+        private static IEnumerable<string> FormatHeader(IEnumerable<string> headerLine, int[] maxColumnLengths)
+        {
+            yield return FormatLine(maxColumnLengths, headerLine);
+            yield return FormatHeaderSeparator(maxColumnLengths);
+        }
+
+        internal static string FormatLine(int[] maxColumnLengths, IEnumerable<string> line)
+        {
+            var formatedLine = string.Empty;
+            var columnCounts = line.Count();
+
+            for (var i = 0; i < columnCounts; i++)
+            {
+                var column = line.ElementAt(i);
+                formatedLine += column.PadRight(maxColumnLengths[i]) + "|";
+            }
+            return formatedLine;
+        }
+
+        internal static string FormatHeaderSeparator(int[] maxColumnLengths)
         {
             var result = string.Empty;
             for (var i = 0; i < maxColumnLengths.Length; i++)

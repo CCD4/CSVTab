@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace CSV_Kata
@@ -7,38 +8,38 @@ namespace CSV_Kata
     public class CsvTabTest
     {
         [Test]
-        public void FormatOutputTest()
+        public void TestFormatOutput()
         {
+            string[] header = {"Name", "Strasse", "Ort", "Alter"};
             string[][] input =
             {
-                new[] {"Name", "Strasse", "Ort", "Alter"},
                 new[] {"Peter Pan", "Am Hang 5", "12345 Einsam", "42"}
             };
 
-            string[] expected =
+            var expected = new List<string>
             {
                 "Name     |Strasse  |Ort         |Alter|",
                 "---------+---------+------------+-----+",
                 "Peter Pan|Am Hang 5|12345 Einsam|42   |"
             };
 
-            var coloumLenghts = CsvTab.MaxLength(input);
-            var actual = CsvTab.FormatOutput(input, coloumLenghts);
+            int[] coloumLenghts = { 9, 9, 12, 5 };
+            var actual = CsvTab.FormatOutput(header, input, coloumLenghts);
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void FormatHeaderLineTest()
+        public void TestFormatHeaderSeparator()
         {
             string expected = @"---------+---------+------------+-----+";
             int[] maxColumnLengths = { 9, 9, 12, 5 };
 
-            var actual = CsvTab.FormatOutputHeader(maxColumnLengths);
+            var actual = CsvTab.FormatHeaderSeparator(maxColumnLengths);
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void MaxLengthTest()
+        public void TestMaxLength()
         {
             string[][] input =
             {
@@ -52,7 +53,7 @@ namespace CSV_Kata
         }
 
         [Test]
-        public void SplitTest()
+        public void TestSplit()
         {
             string[] csvinput =
             {
