@@ -7,10 +7,15 @@ namespace CSV_Kata
     {
         public static IEnumerable<string> Tabelliere(IEnumerable<string> csvZeilen)
         {
-            var split = Split(csvZeilen);
-            var headerLine = ExtractHeaderLine(split);
-            var lines = ExtractLines(split);
-            var maxColumnLengths = MaxLength(split); 
+            var records = Parse(csvZeilen);
+            return Formatiere(records);
+        }
+
+        private static IEnumerable<string> Formatiere(string[][] records)
+        {
+            var headerLine = ExtractHeaderLine(records);
+            var lines = ExtractLines(records);
+            var maxColumnLengths = MaxLength(records);
             var result = FormatOutput(headerLine, lines, maxColumnLengths);
             return result;
         }
@@ -25,7 +30,7 @@ namespace CSV_Kata
             return allLines.Skip(1);
         }
 
-        internal static string[][] Split(IEnumerable<string> csvZeilen)
+        internal static string[][] Parse(IEnumerable<string> csvZeilen)
         {
             return csvZeilen.Select(zeile => zeile.Split(';')).ToArray();
         }

@@ -53,7 +53,7 @@ namespace CSV_Kata
         }
 
         [Test]
-        public void TestSplit()
+        public void TestParse()
         {
             string[] csvinput =
             {
@@ -61,7 +61,7 @@ namespace CSV_Kata
             };
 
             string[][] expected = { new[] { "Name", "Strasse", "Ort", "Alter" } };
-            var actual = CsvTab.Split(csvinput);
+            var actual = CsvTab.Parse(csvinput);
             Assert.AreEqual(expected, actual);
         }
 
