@@ -7,27 +7,22 @@ namespace CSV_Kata
     {
         public static IEnumerable<string> Tabelliere(IEnumerable<string> csvZeilen)
         {
-            var records = Parse(csvZeilen);
+            string[][] records = Parse(csvZeilen);
             return Formatiere(records);
         }
 
         private static IEnumerable<string> Formatiere(string[][] records)
         {
-            var headerLine = ExtractHeaderLine(records);
-            var lines = ExtractLines(records);
             var maxColumnLengths = MaxLength(records);
-            var result = FormatOutput(headerLine, lines, maxColumnLengths);
-            return result;
+            var lines = FormatLines(records, maxColumnLengths).ToList();
+            var separator = FormatHeaderSeparator(maxColumnLengths);
+            InsertSeparator(lines, separator);
+            return lines;
         }
 
-        private static IEnumerable<string> ExtractHeaderLine(IEnumerable<IEnumerable<string>> allLines)
+        private static void InsertSeparator(List<string> lines, string separator)
         {
-            return allLines.First();
-        }
-
-        private static IEnumerable<IEnumerable<string>> ExtractLines(IEnumerable<IEnumerable<string>> allLines)
-        {
-            return allLines.Skip(1);
+            lines.Insert(1, separator);
         }
 
         internal static string[][] Parse(IEnumerable<string> csvZeilen)
@@ -52,14 +47,6 @@ namespace CSV_Kata
             return maxColumnLengths;
         }
 
-        internal static IEnumerable<string> FormatOutput(IEnumerable<string> headerLine, IEnumerable<IEnumerable<string>> lines, int[] maxColumnLengths)
-        {
-            var result = new List<string>();
-            result.AddRange(FormatHeader(headerLine, maxColumnLengths));
-            result.AddRange(FormatLines(lines, maxColumnLengths));
-            return result;
-        }
-
         private static IEnumerable<string> FormatLines(IEnumerable<IEnumerable<string>> splitLines, int[] maxColumnLengths)
         {
             foreach (var line in splitLines)
@@ -67,12 +54,6 @@ namespace CSV_Kata
                 var formatedLine = FormatLine(maxColumnLengths, line);
                 yield return formatedLine;
             }
-        }
-
-        private static IEnumerable<string> FormatHeader(IEnumerable<string> headerLine, int[] maxColumnLengths)
-        {
-            yield return FormatLine(maxColumnLengths, headerLine);
-            yield return FormatHeaderSeparator(maxColumnLengths);
         }
 
         internal static string FormatLine(int[] maxColumnLengths, IEnumerable<string> line)
